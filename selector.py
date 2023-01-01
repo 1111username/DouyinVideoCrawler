@@ -20,12 +20,14 @@ class Selector:
         # 这里开始进行运行选择逻辑
         # 先进行登录
         self._login(phonenumber, logincosttime)
-        # 进入了搜索结果页，
+        # 对页面进行滑动，知道当前页面有足够多的视频数
+        self._swipe(number)
+        #
 
         # 关闭浏览器
         self.browser.quit()
 
-    def _login(self, phonenumber: str, logincosttime: int):
+    def _login(self, phonenumber: str, logincosttime: int) -> None:
         # 先点击“登录”按钮
         select_elem((By.ID, 'Qf6c6FMM'), self.browser).click()
 
@@ -39,14 +41,34 @@ class Selector:
         inputPhoneNumberArea = select_elem((By.CLASS_NAME, 'web-login-normal-input__input'), self.browser)
         # 输入手机号
         inputPhoneNumberArea.send_keys(phonenumber)
-
         # 点击获取验证码
         select_elem((By.CLASS_NAME, 'send-input'), self.browser).click()
-
         # 等待填写验证码并提交
         time.sleep(logincosttime)
 
         pass
+
+    def _swipe(self, number: int) -> None:
+        videoNumberInPage = 0  # 用于保存当前页面的视频总数
+        while videoNumberInPage > number:
+            # 首先下划加载新视频
+            self.browser.execute_script('window.scrollTo(0,document.body.scrollHeight)')  # 划到页面最底部
+            # 首先获取当前页面的包含视频的li标签元素
+            liContentVideo = self.browser.find_elements(By.CLASS_NAME, 'AwIKR2fG')
+            videoNumberInPage = len(liContentVideo)
+
+    def _load_collect(self, number: int) -> list:
+        urlList = []  # 存储视频链接
+        # 首先获取所有带视频的li标签元素
+        liContentVideo = self.browser.find_elements(By.CLASS_NAME, 'Ys1zFCEZ')
+        # 对元素进行遍历
+        for index, item in enumerate(liContentVideo):
+
+
+            # 当满足视频数量时，停止
+            if index == number - 1:
+                break
+
 
 def select_elem(arggs: tuple, driver):
     return WebDriverWait(driver, 30).until(
