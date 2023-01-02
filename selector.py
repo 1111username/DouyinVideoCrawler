@@ -32,6 +32,7 @@ class Selector:
         self._login(phonenumber, logincosttime)
         # 对页面进行滑动，知道当前页面有足够多的视频数
         self._swipe(number)
+        # 开始收集视频链接
         result = self._load_collect(number)
         # 在这里对result进行输出
         self.jsonOperator.save({'urls': result})
@@ -58,7 +59,7 @@ class Selector:
 
     def _login(self, phonenumber: str, logincosttime: int) -> None:
         # 先点击“登录”按钮
-        self.select_elem((By.ID, 'Qf6c6FMM'), self.browser).click()
+        self.select_elem((By.ID, 'qdblhsHs'), self.browser).click()
 
         # 点击弹出框的"验证码登录"按钮
         # 首选获取无序列表的元素集合
@@ -79,7 +80,7 @@ class Selector:
 
     def _swipe(self, number: int) -> None:
         videoNumberInPage = 0  # 用于保存当前页面的视频总数
-        while videoNumberInPage > number:
+        while videoNumberInPage < number:
             # 首先下划加载新视频
             self.browser.execute_script('window.scrollTo(0,document.body.scrollHeight)')  # 划到页面最底部
             # 首先获取当前页面的包含视频的li标签元素
@@ -90,7 +91,7 @@ class Selector:
     def _load_collect(self, number: int) -> list:
         urlList = []  # 存储视频链接
         # 首先获取所有带视频的li标签元素
-        liContentVideo = self.browser.find_elements(By.CLASS_NAME, 'Ys1zFCEZ')
+        liContentVideo = self.browser.find_elements(By.CLASS_NAME, 'hdm9e05T')
         # 对元素进行遍历
         for index, item in enumerate(liContentVideo):
             # 先进行聚焦，以加载视频

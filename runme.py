@@ -1,11 +1,24 @@
-from downloader import get_file
-from selector import selectVideoUrl
+from downloader import Downloader
+from selector import Selector
+from jsonoperator import JSONOperator
+import urllib.parse
 
 if __name__ == '__main__':
-    urlList = selectVideoUrl('https://www.douyin.com/search/%E6%B2%B3%E5%8D%97%E8%AF%9D', # 抖音视频检索结果页连接
-        10, # 爬取的视频数量(只会少，不会等于)
-        30, # 登录所需要的时间(短信验证码登录)
-        '17358766821') # 手机号
-    
-    for item in urlList:
-        get_file(item,'./tars','mp4') # 保存的路径
+    # 读取输入参数
+    inputData = JSONOperator('./input.json').read()
+
+    # 执行选择器，获取所有视频的url，并输出在output.json中
+    Selector(
+        pageurl=urllib.parse.quote(inputData['search']),
+        number=inputData['videoNumber'],
+        logincosttime=inputData['loginCostTime'],
+        phonenumber=inputData['phoneNumber']
+    )
+    # 获取输出的url
+    outputData = JSONOperator('./output.json').read()
+
+    # 对输出的视频url进行下载
+    Downloader(
+        data=outputData,
+        path=inputData['savePath']
+    )

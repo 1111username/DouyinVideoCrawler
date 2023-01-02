@@ -1,0 +1,12 @@
+{
+  "#search" : "你要搜索的内容",
+  "search" : "",
+  "#videoNumber" : "你要下载的视频的数量",
+  "videoNumber" : 0,
+  "#loginCostTime": "进入页面到开始滑动的等待时间，留给登录使用，秒",
+  "loginCostTime": 30,
+  "#phoneNumber": "登录使用的手机号",
+  "phoneNumber": "1234567890",
+  "#savePath": "保存的位置",
+  "savePath": "./tars"
+}
